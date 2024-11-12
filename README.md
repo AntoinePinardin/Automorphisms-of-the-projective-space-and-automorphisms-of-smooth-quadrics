@@ -1,0 +1,1 @@
+# Groups-of-automorphisms-of-smooth-quadric-surfaces
