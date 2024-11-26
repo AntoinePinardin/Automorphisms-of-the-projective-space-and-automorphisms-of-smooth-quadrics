@@ -38,3 +38,13 @@ def AutQuadSurf(M1,M2,s):
     M=AutP3(P0,P1,P2,P3,P4,Q0,Q1,Q2,Q3,Q4);
     return M;
     
+def SGPGL4(Matrices):
+    x=PolynomialRing(QQbar,'x').gen();
+    for M in Matrices:
+        M=Matrix(M);
+        M=M/(x^4-det(M)).roots()[0][0];
+    G=MatrixGroup(Matrices);
+    Z=G.center();
+    G=G.quotient(Z);
+    return G;
+    
