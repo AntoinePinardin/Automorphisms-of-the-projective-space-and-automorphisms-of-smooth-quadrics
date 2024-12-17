@@ -13,35 +13,31 @@ F:=Matrix(K,2,[w5,0,0,1]);
 I:=Matrix(K,2,[1,0,0,1]);
 
 
-//The following function takes two ordered sets of 4 points of P3 in general position, and returns the unique matrix in PGL_4 which takes the first set to the second one.
+//The following function takes two ordered sets of n+2 points of P^n in general linear position, and returns the unique matrix in PGL_{n+1} which takes the first set to the second one.
 
 
 AutPn:=function(points,images,n)
-	points1:=[];
-	for P in points do
-		points1:=points1 cat [<t:t in P>];
-	end for;
-	images1:=[];
-	for Q in images do
-		images1:=images1 cat [<t:t in Q>];
-	end for;
-	A1<a,b,c,d>:=AffineSpace(K,n+1);
-    X1:=Scheme(A1,[a*points1[2][1]+b*points1[3][1]+c*points1[4][1]+d*points1[5][1]-points1[1][1],a*points1[2][2]+b*points1[3][2]+c*points1[4][2]+d*points1[5][2]-points1[1][2],a*points1[2][3]+b*points1[3][3]+c*points1[4][3]+d*points1[5][3]-points1[1][3],a*points1[2][4]+b*points1[3][4]+c*points1[4][4]+d*points1[5][4]-points1[1][4]]);
+	points:=[<t:t in P>:P in points];
+	images:=[<t:t in Q>:Q in images];
+	A1:=AffineSpace(K,n+1);
+	DefPols1:=[&+([A1.j*points[j+1][i]:j in [1..n+1]] cat [-points[1][i]]):i in [1..n+1]];
+	X1:=Scheme(A1,DefPols1);
     sols1:=RationalPoints(X1);
 	eltsM1:=[];
-	for i in [1..4] do
-		eltsM1:=eltsM1 cat ElementToSequence(sols1[1][i]*Vector(K,4,[points1[i+1][1],points1[i+1][2],points1[i+1][3],points1[i+1][4]]));
+	for i in [1..n+1] do
+		P:=[points[i+1,j]:j in [1..n+1]];
+		eltsM1:=eltsM1 cat ElementToSequence(sols1[1][i]*Vector(K,n+1,P));
 	end for;
-    M1:=Transpose(Matrix(K,4,eltsM1));
-	
-	X2:=Scheme(A1,[a*images1[2][1]+b*images1[3][1]+c*images1[4][1]+d*images1[5][1]-images1[1][1],a*images1[2][2]+b*images1[3][2]+c*images1[4][2]+d*images1[5][2]-images1[1][2],a*images1[2][3]+b*images1[3][3]+c*images1[4][3]+d*images1[5][3]-images1[1][3],a*images1[2][4]+b*images1[3][4]+c*images1[4][4]+d*images1[5][4]-images1[1][4]]);
+    M1:=Transpose(Matrix(K,n+1,eltsM1));
+	DefPols2:=[&+([A1.j*images[j+1][i]:j in [1..n+1]] cat [-images[1][i]]):i in [1..n+1]];
+	X2:=Scheme(A1,DefPols2);
 	sols2:=RationalPoints(X2);
 	eltsM2:=[];
-	for i in [1..4] do
-		eltsM2:=eltsM2 cat ElementToSequence(sols2[1][i]*Vector(K,4,[images1[i+1][1],images1[i+1][2],images1[i+1][3],images1[i+1][4]]));
+	for i in [1..n+1] do
+		Q:=[images[i+1,j]:j in [1..n+1]];
+		eltsM2:=eltsM2 cat ElementToSequence(sols2[1][i]*Vector(K,n+1,Q));
 	end for;
-	M2:=Transpose(Matrix(K,4,eltsM2));
-	
+	M2:=Transpose(Matrix(K,n+1,eltsM2));
 	M:=M2*M1^-1;
 	return M;
 end function;
@@ -65,15 +61,12 @@ AutQuadSurf:=function(M1,M2,s)
 	return AutPn(points,images,3);	
 end function;
 
-//The following function takes a list of invertible matrices and their size, and returns the subgroup of PGL they generate.
+//The following function takes a list of invertible matrices, and returns the subgroup of PGL they generate.
 
 SGPGL:=function(matrices)
 	dimension:=Nrows(matrices[1]);
-   	gens:=[];
-   	for M in matrices do
-        	gens:=Append(gens,M/Roots(x^dimension-R!Determinant(M))[1,1]);
-	end for;
-	G:=sub<GL(dimension,K)|[GL(dimension,K)|M: M in gens]>;
+   	matrices:=[M/Roots(x^dimension-R!Determinant(M))[1,1]:M in matrices];
+	G:=sub<GL(dimension,K)|[GL(dimension,K)|M: M in matrices]>;
 	D:=[M: M in Center(G) | IsScalar(M)];
 	GP:=quo<G|D>;
 	return(GP);
