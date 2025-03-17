@@ -53,7 +53,7 @@ AutPn:=function(points,images)
 	return M;
 end function;
 
-//The following function takes a triple (M1,M2,s) \in PGL_2^2\rtimes C_2=Aut(P1xP1), and returns the matrix of PGL_4 whose restriction on the quartic xt=yz gives the corresponding automorphism after Segre embedding.
+//The following function takes a triple (M1,M2,s) \in PGL_2^2\rtimes C_2=Aut(P1xP1), and returns the matrix of PGL_4 whose restriction on the quartic xt=yz induces the corresponding automorphism after Segre embedding.
 
 AutQuadSurf:=function(M1,M2,s)
 	M1:=Matrix(K,2,ElementToSequence(M1));
