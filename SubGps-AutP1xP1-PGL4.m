@@ -21,6 +21,7 @@ D:=Matrix(K,2,[1,-i,i,-1]);
 E:=Matrix(K,2,[1,1-w5-w5^-1,1,-1]);
 F:=Matrix(K,2,[w5,0,0,1]);
 I:=Matrix(K,2,[1,0,0,1]);
+E2:=E*F*E^2*F*E^-1;//It is the image of E by an automorphism of A5 which is not internal. F is its own image by this automorphism.
 
 
 //The following function takes two ordered sets of n+2 points of P^n in general linear position, and returns the unique matrix in PGL_{n+1} which takes the first set to the second one.
