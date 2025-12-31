@@ -1,4 +1,4 @@
-# Automorphism groups of the projective space and automorphism groups of smooth quadrics
+# Automorphism groups of the projective space and automorphism groups of smooth quadric curves
 
 The file SubGps-AutP1xP1-PGL4.txt contains a Magma code which can be executed using the online calculator available at https://magma.maths.usyd.edu.au/calc/ . It has the following features.
 
